@@ -1,0 +1,31 @@
+(setf measure1 4)
+(setf measure2 4)
+(setf measure3 2)
+(setf measure4 2)
+
+(setf chords1 '(bb3 c4 db4 eb4 f4 gb4 ab4))
+(setf chords2 '(cs4 e4 fs4 a4 b4))
+
+(setf melody1 (rnd-sample (* measure1 16) chords1))
+(setf melody2 (rnd-sample (* measure2 16) chords2))
+(setf melody3 (rnd-sample (* measure3 16) chords1))
+(setf melody4 (rnd-sample (* measure4 16) (pitch-transpose 2 chords1)))
+(setf melodies (assemble-seq melody1 melody2 melody3 melody4))
+(setf rhythm (span melodies '(s)))
+(setf rhythm-skipped (length-weight rhythm :weight '(9 1)))
+(setf together (make-omn
+                :pitch melodies
+                :length rhythm-skipped))
+(setf chord '(c4e4g4b4))
+(setf chord '(c4eb4g4bb4d5))
+(setf together (randomize-octaves '(c3 g6) (gen-repeat 16 (make-omn :pitch (melodize chord) :length (gen-repeat 4 '(e s s e.))))))
+(def-score rock-phrase
+           (:key-signature '(bb min)
+            :time-signature '(4 4)
+            :tempo 132)
+           (inst
+            :omn together
+            :sound 'gm
+            :program 28))
+(display-musicxml 'rock-phrase)
+(live-coding-midi 'rock-phrase)

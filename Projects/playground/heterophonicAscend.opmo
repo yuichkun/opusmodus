@@ -1,0 +1,49 @@
+(setf SIZE 250)
+(setf modSize 100)
+;;Creating the Vector
+(list-plot (setf p-vec (gen-sawtooth SIZE 1 1 :modulation (gen-sawtooth modSize 1 1))))
+
+
+;;FAGOTT
+(setf fg-pitch (vector-to-pitch '(c2 c5) p-vec))
+(setf fg-rhy (span fg-pitch '(e -e)))
+(setf fg (make-omn :pitch fg-pitch :length fg-rhy :velocity (gen-cresc (length fg-rhy) 'pp 'ff) :articulation '(stacc)))
+
+;;CLARINET
+(setf cl-pitch (vector-to-pitch '(d3 f6) p-vec))
+(setf cl-rhy (span cl-pitch '(3q -3q 3q)))
+(setf cl (length-adjust (get-span fg-rhy) (make-omn :pitch cl-pitch :length cl-rhy :velocity (gen-cresc (length cl-rhy) 'pp 'ff) :articulation '(stacc)):position 's))
+
+
+;;OBOE
+(setf ob-pitch (vector-to-pitch '(c4 e6) p-vec))
+(setf ob-rhy (span ob-pitch '(s -s)))
+(setf ob (length-adjust (get-span fg-rhy) (make-omn :pitch ob-pitch :length ob-rhy :velocity (gen-cresc 100 'pp 'ff) :articulation '(stacc)):position 's))
+
+;;FLUTE
+(setf fl-pitch (vector-to-pitch '(c4 a6) p-vec))
+(setf fl-rhy (span fl-pitch '(3e -3e 3e)))
+(setf fl (length-adjust (get-span fg-rhy) (make-omn :pitch fl-pitch :length fl-rhy :velocity (gen-cresc 100 'pp 'ff) :articulation '(stacc)):position 's))
+
+
+(def-score heterophonicAscend
+         (:key-signature 'atonal 
+          :time-signature '(4 4)
+          :tempo 160)
+(fl :omn fl
+    :channel 1
+    :sound 'gm
+    :program 'flute)
+(ob :omn ob
+    :channel 2
+    :sound 'gm
+    :program 'oboe)
+(cl :omn cl
+    :channel 3
+    :sound 'gm
+    :program 'clarinet)
+(fg :omn fg
+    :channel 4
+    :sound 'gm
+    :program 'bassoon)
+)

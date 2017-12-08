@@ -1,0 +1,44 @@
+
+;;Scales
+(setf line1 '(c4 cs4 eb4 e4 fs4 g4 a4 bb4))
+(setf line2 '(c4 d4 e4 g4 a4))
+(setf line3 (integer-to-pitch (gen-integer 11)))
+(setf line4 '(c4 d4 e4 fs4 gs4 as4))
+
+(setf line-rnd (gen-eval 30 '(rnd-sample 5 line4) :seed 2))
+(setf bin-rhythm-r (gen-binary-remove '(c4) line-rnd))
+
+(setf rhythm-r (span line-rnd '(s)))
+
+(setf line-mapped (binary-map bin-rhythm-r line-rnd))
+(setf more-map (gen-binary-anacrusis line-mapped))
+(setf final-line (binary-map more-map line-mapped))
+(setf rhythm-mapped (binary-map bin-rhythm-r rhythm-r))
+
+(setf bass (gen-eval 150 '(chord-interval-add (list (rnd-range 1 11)) '(c2))))
+(setf bass-rhythm (span bass '(s)))
+
+;;Settings
+(setf piano-r (make-omn
+               :length rhythm-mapped
+               :pitch final-line))
+(setf piano-l (make-omn
+               :length (length-weight bass-rhythm :weight '(3 1))
+               :pitch bass))
+(setf ts-list (get-time-signature piano-r))
+
+;;Score-Layout
+(def-score after-coffee-break
+           (:key-signature 'atonal
+            :time-signature ts-list
+            :tempo 170
+            :layout (piano-layout 'piano-rh 'piano-lh))
+  (piano-rh
+   :omn piano-r
+   :channel 1
+   :sound 'gm
+   :program 'acoustic-grand-piano)
+
+  (piano-lh
+   :omn piano-l  )
+)

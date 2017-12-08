@@ -1,0 +1,18 @@
+(setf wave (gen-white-noise 120))
+(setf piano-p (chordize (gen-divide 4 (vector-to-pitch '(c1 g2) wave))))
+(setf piano-l (span piano-p '(q)))
+(setf piano (make-omn :pitch piano-p :length piano-l))
+
+(setf wave (gen-sine 120 4 1))
+(setf vl-p (respell (tonality-map '(yogo :root c4) (vector-to-pitch '(g3 c6) wave))))
+(setf vl-l (span vl-p '(e s)))
+(setf vl (length-adjust (get-span (get-time-signature piano)) (make-omn :pitch vl-p :length vl-l)))
+
+(def-score test
+           (:key-signature 'atonal
+            :time-signature '(4 4)
+            :tempo 80)
+(vl :omn vl)
+(piano :omn piano))
+
+(preview)

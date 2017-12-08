@@ -1,0 +1,20 @@
+;;Original Melody
+(setf melo '(q c4 e d4  e e4  q. f4 e g4 q a4 b4))
+
+;;Define Function
+(defun skip-notes(original)
+  (let ((len (omn :length original)) (pitch (omn :pitch original)))
+    (let '(pos (loop for i from 1 to (length len) 
+                 when (oddp i)
+                 collect i))
+      (let '(new-len (flatten (gen-pause (mclist len) :section pos)))
+        (let '(new-pitch (gen-swallow new-len pitch))
+          (return-from skip-notes (make-omn :pitch new-pitch :length new-len))
+        )
+      )
+    )
+  )
+)
+;;Use it
+(skip-notes melo)
+

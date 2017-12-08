@@ -1,0 +1,45 @@
+(setf measure 8)
+
+;;RightHand Pitch
+(setf rh-pitch-base '(c4 eb4 f4 fs4 g4 bb4 c5))
+(setf rh-pitch-series (gen-eval (* measure 16) '(rnd-pick rh-pitch-base)))
+;;RightHand Rhythm
+(setf rh-rhy (span rh-pitch-series '(s)))
+(setf rh-rhy-skipped (length-weight rh-rhy :weight '(7 1)))
+(setf rh-first (make-omn
+          :pitch rh-pitch-series
+          :length rh-rhy-skipped))
+(setf rh-coda '(-q h. eb4fs4a4d5))
+(setf rh (assemble-seq rh-first rh-coda))
+
+;;LeftHand Pitch
+(setf lh-fifth '(c2g2))
+(setf lh-pitch-base (gen-divide 4 (gen-repeat 16 lh-fifth)))
+(setf lh-pitch-series (gen-eval (* measure 4) '(pitch-transpose (rnd-pick '(0 5 7)) lh-pitch-base) :seed 213))
+;;LeftHand Rhythm
+(setf lh-rhy-base (span lh-pitch-series '(s)))
+(setf lh-rhy-skipped (length-weight lh-rhy-base :weight '(3 2)))
+
+(setf lh-first (make-omn
+          :pitch lh-pitch-series
+          :length lh-rhy-skipped))
+(setf lh-coda '(-q  h. c2g2c3))
+(setf lh (assemble-seq lh-first lh-coda))
+
+
+;;score
+(def-score Rockband
+           (:key-signature 'atonal
+            :time-signature '(4 4)
+            :tempo 132)
+          (instrument-r
+           :omn rh
+           :port 0)
+
+           (instrument-l
+            :omn lh
+            :channel 2
+            ))
+
+(display-musicxml 'rockband)
+(live-coding-midi'rockband)

@@ -1,0 +1,51 @@
+;In senpou (Onmyo)
+(create-tonality samuraiScale1 '(c4 db4 f4 g4 bb4))
+;Ritsu senpou (Onmyo)
+(create-tonality samuraiScale2 '(c4 d4 e4 g4 a4))
+;minyo
+(create-tonality samuraiScale3 '(c4 eb4 f4 g4 bb4))
+;ryukyu
+(create-tonality samuraiScale4 '(c4 e4 f4 g4 b4))
+
+(defun evalAll() 
+(setf scale (list 'samuraiScale3))
+;;Lead
+(setf lead-v (vector-to-pitch '(c5 c7) (gen-sine 30 1 1)))
+(setf lead-p (tonality-map scale lead-v))
+(setf lead-l (span lead-p '(h)))
+(setf lead (make-omn :pitch lead-p :length lead-l))
+
+;;koto
+(setf koto-v (vector-to-pitch '(b2 c5) (gen-white-noise 100)))
+(setf koto-p (filter-repeat 1 (tonality-map scale koto-v)))
+(setf r1 '(h q q)
+      r2 '(s s s s)
+      r3 '(s s e)
+      r4 '(q s s s s))
+(setf koto-l (rnd-sample 40 (apply-eval '(r1 r2 r3 r4))))
+(setf koto (make-omn :pitch koto-p :length (length-adjust (get-span lead-l) (flatten koto-l))))
+
+(def-score final
+           (:key-signature 'atonal
+            :time-signature '(4 4)
+            :tempo 30)
+(lead 
+ :port 0
+ :channel 1
+ :volume 80
+ :omn lead)
+(koto
+ :channel 2
+ :omn koto
+ :volume 127)
+)
+(display-musicxml 'final)
+(display-midi 'final)
+(sleep 20)
+(evalAll)
+
+)
+(evalAll)
+;(live-coding-midi 'final)
+
+

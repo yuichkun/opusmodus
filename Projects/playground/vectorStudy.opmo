@@ -1,0 +1,20 @@
+;;;CONFIG
+(setf volume 10)
+(setf pitch-range '(c4 c6))
+
+;;;CODE
+(setf origin-p (car (rnd 1)))
+(setf origin-l (car (rnd 1)))
+(setf origin (list origin-p origin-l))
+
+(setf p-noise (vector-to-list (gen-white-noise volume)))
+(setf l-noise (vector-to-list (gen-white-noise volume)))
+(setf paired-tones (loop :for p :in p-noise
+      :for l :in l-noise
+      :collect (list p l)))
+
+
+(binary-map (gen-binary 4 16) 's)
+
+
+(length-rational-quantize '(1/4 -1/16 1/16 5/7 1/5 3/10 3/20 5/16):type :denominator)

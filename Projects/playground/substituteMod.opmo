@@ -1,0 +1,30 @@
+(setf p (progn 
+  (setf original (gen-integer 11))
+  (setf counter 1)
+  (gen-eval 100 
+            '(progn
+               (format t "counter: ~s~%" counter)
+               (setf newThings '(1))
+               (setf target (list (random 12)))
+               (setf original (substitute-map newThings target original))
+               (if (> (car (count-item (car newThings) original)) counter) 
+                 (progn 
+                   (print "reset time")
+                   (setf original (gen-integer 11))
+                   (setf counter (+ 1 counter))
+                 )
+                 (print "not enough")
+               )
+               (integer-to-pitch original)
+             )
+  )
+))
+
+(def-score substituteMod
+           (:key-signature 'atonal
+            :time-signature '(4 4)
+            :tempo 144)
+(piano 
+ :omn (make-omn :pitch p :length (span p '(s)))
+ :sound 'gm
+ :program 3))

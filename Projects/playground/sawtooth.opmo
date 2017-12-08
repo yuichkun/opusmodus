@@ -1,0 +1,47 @@
+(list-plot (setf vec (coerce (gen-sawtooth 1500 15 1) 'list)))
+
+
+
+(setf pitch (vector-to-pitch '(c2 c7) vec))
+(setf rhy  (vector-to-length 1/16 4 1 vec))
+
+(defun optRhythm(ls)
+                 (setf len (length ls))
+                 (setf cur 0)
+                 (setf prev 0)
+                 (setf segCount 1)
+                 (setf divSegment ())
+                 (dotimes (i len)
+                       (format t "-----~%")
+                       (setf cur (nth i ls))
+                       (if (= cur prev)
+                           (progn (setf segCount (+ 1 segCount))
+                                  (format t "same ~d~%" i)
+                                  (format t "segCount ~d~%" segCount)
+                           )
+                           (progn (push segCount divSegment)
+                                  (format t "dif ~d~%" i)
+                                  (setf segCount 1)
+                           )
+                       )
+                       (setf prev cur)
+                 )
+                (gen-divide (rest (reverse divSegment)) ls)
+)
+
+(setf ts (get-time-signature (optRhythm rhy)))
+
+
+
+(setf final(make-omn :pitch pitch :length rhy))
+(def-score sawtooth
+           (:key-signature 'atonal
+            ;:time-signature '(4 4)
+            :time-signature ts
+            :tempo 180
+            :layout (grand-layout 'inst))
+(inst :omn final
+      :sound 'gm
+      :program 0))
+
+
