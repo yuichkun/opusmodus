@@ -1,0 +1,45 @@
+(setf measure 16)
+(setf sequence '(0 5 0 5 7 5 0 0))
+
+;;;;;;;;;;;;;;;;;;
+(setf bass-p (gen-repeat 2'(c3 eb3 g2)))
+(setf bass-l '(e. e. e -e e e e))
+(setf bass-riff (make-omn :pitch bass-p :length bass-l))
+(setf bass (pitch-transpose sequence (gen-repeat measure (list bass-riff))))
+
+
+;;;;;;;;;;;;;;;;;;;
+
+(setf guitar-rest (gen-repeat 2 '(-w)))
+
+(create-tonality my-scale '(c4 eb4 f4 fs4 g4 bb4))
+(list-plot (setf vec (gen-sine (* measure 16) 3 1 :modulation (gen-sawtooth 1000 20 0.5))))
+
+
+(setf guitar-l (gen-repeat measure (list (gen-repeat 16 '(s)))))
+
+(setf guitar-p (filter-repeat 4 (tonality-map '(my-scale) (vector-to-pitch '(c3 c6) vec))))
+(setf guitar (length-weight (pitch-transpose sequence (make-omn :pitch guitar-p :length guitar-l))))
+
+
+;;;;;;;;;;;;;;;;;;;
+(setf drum (gen-repeat measure '(w cs4)))
+
+(def-score final
+           (:key-signature 'atonal
+            :time-signature '(4 4)
+            :tempo 120)
+
+(guitar :omn guitar
+        :port 0
+        :channel 2)
+(bass :omn bass
+      :port 0
+      :channel 1)
+(drum :omn drum
+      :channel 3
+      :volume 80))
+
+(display-midi 'final)
+;(live-coding-midi 'final)
+(display-musicxml 'final)

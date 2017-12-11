@@ -1,0 +1,60 @@
+(defun play()
+  (display-midi *last-score* :display :quick-view))
+(defun show()
+  (display-musicxml *last-score*))
+(defun preview ()
+  (show)
+  (play)
+)
+#|(defmacro simple-score (tempo omn)
+  `(def-score simple-score
+             (:key-signature 'atonal
+              :time-signature '(4 4)
+              :tempo ,tempo)
+   (inst :omn ,omn))
+)
+(defmacro simple-score-IAC (tempo omn)
+  `(def-score simple-score-IAC
+             (:key-signature 'atonal
+              :time-signature '(4 4)
+              :tempo ,tempo)
+  (inst :omn ,omn
+        :port 0))
+)
+|#
+(defun simple-score (score)
+ (let ((index 0))
+  (eval 
+   `(def-score simple-score 
+      (:key-signature 'atonal
+       :time-signature '(4 4)
+       :tempo 120)
+      ,@(mapcar #'(lambda (part)
+            (incf index)
+            (list* (intern (concatenate 'string (string '#:inst-) (write-to-string index)))
+                    :omn `(quote ,part) nil)
+       )
+        score)
+    )
+  )
+ )
+)
+(defun simple-score-IAC (score)
+ (let ((index 0))
+  (eval 
+   `(def-score simple-score 
+      (:key-signature 'atonal
+       :time-signature '(4 4)
+       :tempo 120)
+      ,@(mapcar #'(lambda (part)
+            (incf index)
+            (list* (intern (concatenate 'string (string '#:inst-) (write-to-string index)))
+                    :omn `(quote ,part) :port 0 :channel index nil)
+       )
+        score)
+    )
+  )
+ )
+)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+

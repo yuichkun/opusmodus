@@ -1,0 +1,39 @@
+(setf bars 32)
+(setf bin (gen-binary 4 16 :seed 13))
+
+(setf minorChord (chord-inversion 1 (integer-to-pitch (expand-chord-name 'm7))))
+
+(setf seq (rnd-number bars 0 11))
+(setf rightHand-p (rnd-octaves '(c4 c6) (pitch-transpose seq (gen-repeat (length seq) (list (melodize minorChord))))))
+
+(setf rightHand-l (span rightHand-p '(s)))
+(setf rightHand-raw (make-omn :pitch rightHand-p :length rightHand-l :articulation nil))
+
+(setf rightHand (loop for bar in rightHand-raw
+  :collect (if (> 0.5 (car (rnd 1))) bar (length-augmentation (car(rnd-number 1 1 4)) (length-adjust (/ (car(rnd-number 1 2 6)) 16) bar)))))
+(setf rightHand-artic (mapcar (lambda (n) (append (gen-repeat (- (length n) 1) 'leg) '(-))) (omn :length rightHand)))
+(setf rightHand-dyn 
+      (mapcar 
+       (lambda (n)
+            (gen-dynamic (list 2 3) '(pp ff))
+
+       ) 
+       (mapcar 'length (omn :length rightHand))
+      )
+)
+(setf rightHand (omn-replace :velocity rightHand-dyn (omn-replace :articulation rightHand-artic rightHand)))
+
+(setf t-sig (get-time-signature rightHand))
+(setf leftHand (pitch-transpose -17 rightHand))
+;;(setf leftHand '(-w))
+
+(def-score final
+           (:key-signature 'atonal
+            :time-signature t-sig
+            :tempo 116
+            :layout (piano-layout 'rHand 'lHand))
+(rHand :omn rightHand)
+(lHand :omn leftHand))
+
+(display-musicxml 'final)
+(display-midi 'final)

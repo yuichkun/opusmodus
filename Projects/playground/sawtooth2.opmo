@@ -1,0 +1,39 @@
+;;Vector
+(setf size 200)
+(setf waveNum 2)
+(setf vec (gen-sawtooth size waveNum 1))
+(list-plot vec)
+;;Length
+(setf rhyTemplate (flatten (list '1w '3w (gen-repeat 2 '1h) (gen-repeat 2 '3h) (gen-repeat 4 '1q) (gen-repeat 4 '3q)  (gen-repeat 8 '1e)  (gen-repeat 16 '1s) (gen-repeat 4 '5q))))
+
+(setf rhy (vector-map (progn (setf arr nil)
+                             (dotimes (x (length rhyTemplate))
+                                      (push (makeTuplet (nth x rhyTemplate)) arr)
+                             )
+                             (reverse arr))
+           vec)
+)
+;;Pitch
+(setf toneVec (gen-sawtooth (length (flatten rhy)) waveNum 1))
+(setf tone (vector-map (integer-to-pitch (gen-integer -30 30))toneVec))
+
+;;Integration / Scoring
+(setf omn (make-omn :pitch tone :length rhy))
+
+
+(setf ts (get-time-signature (optRhythm (omn :length (flatten rhy)))))
+;(setf ts (get-time-signature rhy))
+
+(def-score sawtooth2
+           (:key-signature 'atonal
+            :time-signature ts
+            :tempo 130
+            :layout (grand-layout 'pno))
+  
+  (pno :omn omn
+       :channel 1
+       :sound 'gm
+       :program 0)
+  )
+
+

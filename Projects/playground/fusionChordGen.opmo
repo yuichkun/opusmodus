@@ -1,0 +1,47 @@
+(setf bars 32)
+(setf origin '(0 1 0 5 8 7 0))
+(setf path (flatten (integer-transpose '(0 1 0 5 1) (gen-repeat bars (list origin)))))
+
+(defun get-chord (a-path)
+  (let '(ret nil)
+    (loop for i in a-path do 
+      (progn
+        (let ((chord nil) (type nil))
+         (setf type (rnd-pick '(m maj m m m7 maj7b5)))
+         (setf chord (expand-chord (list (integer-to-pitch i) type)))
+         (push chord ret)
+        )
+      )
+    )
+    (reverse ret)
+  )
+)
+
+(setf piano-p (get-chord path))
+;(setf piano-p
+   ;   (let '(ret nil)
+  ;      
+ ;     )
+;)
+
+(setf piano-len (gen-eval bars '(length-weight (gen-repeat 16 '(s)) :weight '(2 7))))
+(setf piano (make-omn :pitch piano-p :length (flatten piano-len)))
+
+(setf drums (make-omn :pitch (gen-repeat bars  '(c4 cs4 d4 cs4)) :length (gen-repeat bars '(w))))
+(setf bass (make-omn :pitch (pitch-transpose -12 (integer-to-pitch path)) :length piano-len))
+(def-score fusion-jazz
+           (:key-signature 'atonal
+            :time-signature '(4 4)
+            :tempo 120)
+(piano :omn piano
+       :port 0
+       :channel 1)
+(drums :omn drums
+       :port 0
+       :channel 2)
+(bass :omn bass
+      :port 0
+      :channel 3)
+)
+(display-musicxml *last-score*)
+(display-midi *last-score*)

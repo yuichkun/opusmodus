@@ -1,0 +1,20 @@
+(setf pitches (pitch-expansion-series 100 '(1) '(1) '(c3 d3 e3 f3 g3):seed 23))
+
+(setf length (span pitches '(s)))
+(setf dyn (span pitches '(f)))
+(setf rh (make-omn
+          :pitch pitches
+          :length length
+          :velocity dyn))
+(list-plot (flatten(pitch-to-integer pitches)):point-radius 1 :join-points t)
+
+(def-score myscore 
+           (:title "Ascending pitches"
+            :key-signature 'atonal
+            :time-signature '(4 8)
+            :tempo 144)
+           (rhand
+            :omn rh
+            :channel 1
+            :sound 'gm
+            :program 'acoustic-grand-piano))

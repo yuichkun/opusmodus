@@ -1,0 +1,50 @@
+;;; file version
+
+3 
+
+;;; navigator
+
+(:GROUP "root"
+ ((:GROUP "COMPLETE"
+   ((:FILE "rockband.opmo") (:FILE "guitarsolo.opmo")
+    (:FILE "after_coffee_break.opmo") (:FILE "ascending-scale.opmo")
+    (:FILE "heterophonicAscend.opmo") (:FILE "livecodingtest.opmo")
+    (:FILE "bluesFest.opmo") (:FILE "revPitchExpansion.opmo")
+    (:FILE "sawtooth.opmo") (:FILE "sawtooth2.opmo")
+    (:FILE "stringKhaos.opmo") (:FILE "substituteMod.opmo")
+    (:FILE "synth.opmo") (:FILE "Japanese.opmo")
+    (:FILE "bluesFest.nkm") (:FILE "twoFlutes.opmo")
+    (:FILE "white_ranbu.opmo") (:FILE "skip-notes.opmo")
+    (:FILE "fusionChordGen.opmo")))
+  (:FILE "play.opmo") (:FILE "vectorStudy.opmo")
+  (:FILE "melodizedChords.opmo") (:FILE "test.opmo")))
+
+;;; layout plist
+
+(:NAVIGATOR-RECT #(0.0D0 0.0D0 163.0D0 1080.0D0)
+ :SELECTED-NAVIGATOR-TAB-TAG 0 :NAVIGATOR-COLLAPSED-P NIL
+ :MIDDLE-RECT #(164.0D0 0.0D0 1372.0D0 1080.0D0) :EDITOR-RECT
+ #(0.0D0 0.0D0 1372.0D0 851.0D0) :COMPOSER-VISIBLE-P T
+ :ASSISTANT-VISIBLE-P NIL :LISTENER-RECT
+ #(0.0D0 852.0D0 1372.0D0 228.0D0) :LISTENER-COLLAPSED-P NIL
+ :UTILITIES-RECT #(1537.0D0 0.0D0 383.0D0 1080.0D0)
+ :SELECTED-UTILITIES-TAB-TAG 6 :QUICK-VIEW-COLLAPSED-P T
+ :UTILITIES-COLLAPSED-P NIL)
+
+;;; composer
+
+"play.opmo" 
+
+;;; list of assistants
+
+("/Applications/Opusmodus.app/Contents/Resources/English.lproj/system.omdocset/System Library/Lengths/Time Point System/time-point-system.rtfd/")
+
+;;; grid menu state 
+
+(:GRID-MENU-STATE
+ (:COMPOSER ("heterophonicAscend.opmo" "play.opmo") :ASSISTANTS
+  ("/Applications/Opusmodus.app/Contents/Resources/English.lproj/system.omdocset/System Library/Lengths/Time Point System/time-point-system.rtfd/")))
+
+;;; quick-view pathname
+
+"/Applications/Opusmodus.app/Contents/Resources/English.lproj/system.omdocset/System Library/L-System/pitch-lsystem.rtfd"

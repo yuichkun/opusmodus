@@ -1,0 +1,26 @@
+(setf size 50)
+
+;;(setf pitch (rnd-sample size (integer-to-pitch (rnd-row))))
+;;(setf pitch (tonality-map '(minor) (integer-to-pitch (rnd-number size -10 30))))
+(list-plot (setf p-vec (gen-sawtooth size (* -1 (/ size 15)) 1 :modulation (gen-sawtooth size 1 1))))
+(setf pitch (tonality-map '(minor) (vector-to-pitch '(c2 f5) p-vec)))
+
+
+;;(setf len (rnd-sample size '(e s s)))
+
+(setf len (vector-to-length '1/16 1 5 p-vec))
+
+(setf omn (make-omn :pitch pitch :length len))
+
+(setf t-sig (get-time-signature (gen-divide 4 len)))
+
+(def-score livecodingtest
+           (:key-signature '(c minor)
+            :time-signature t-sig
+            :tempo 160
+            :layout (grand-layout 'piano))
+(piano 
+ :omn omn))
+
+(display-musicxml 'livecodingtest)
+(live-coding-midi 'livecodingtest)
