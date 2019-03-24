@@ -1,0 +1,24 @@
+;; Config
+(setf seed 77031)
+(setf MOD 11)
+(setf tempo 150)
+;; Util
+(defun collatz(n &optional ls)
+  (if (eq n 1)
+      (flatten (list ls 1))
+      (if (evenp n)
+        (collatz (/ n 2) (list ls n))
+        (collatz (+ (* n 3) 1) (list ls n))
+      )
+  )
+)
+
+;; Playground
+(setf ints (collatz seed))
+(list-plot (modus ints :mod MOD))
+(setf pitch (modus ints :type :pitch :mod MOD))
+(setf length (span pitch '(s)))
+(setf omn (glue pitch length))
+
+(simple-score-grand-IAC (list omn) tempo)
+(preview)

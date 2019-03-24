@@ -15,25 +15,32 @@
     (:FILE "synth.opmo") (:FILE "Japanese.opmo")
     (:FILE "bluesFest.nkm") (:FILE "twoFlutes.opmo")
     (:FILE "white_ranbu.opmo") (:FILE "skip-notes.opmo")
-    (:FILE "fusionChordGen.opmo")))
-  (:FILE "play.opmo") (:FILE "vectorStudy.opmo")
-  (:FILE "melodizedChords.opmo") (:FILE "test.opmo")))
+    (:FILE "fusionChordGen.opmo") (:FILE "wave-modulation.opmo")
+    (:FILE "spectral.opmo") (:FILE "spectral-2.opmo")
+    (:FILE "vectorStudy.opmo") (:FILE "melodizedChords.opmo")
+    (:FILE "spectral-test.opmo")
+    (:FILE "interval-to-pitch-study.opmo")
+    (:FILE "evolving-intervals.opmo")))
+  (:FILE "play.opmo") (:FILE "qiita-tutorial.opmo")
+  (:FILE "qiita-tutorial-2.opmo") (:FILE "collatz.opmo")
+  (:FILE "collatz-rhythm.opmo") (:FILE "separate-parts.opmo")
+  (:FILE "microtonal-wave.opmo") (:FILE "hoge.opmo")))
 
 ;;; layout plist
 
-(:NAVIGATOR-RECT #(0.0D0 0.0D0 163.0D0 797.0D0)
+(:NAVIGATOR-RECT #(0.0D0 0.0D0 163.0D0 855.0D0)
  :SELECTED-NAVIGATOR-TAB-TAG 0 :NAVIGATOR-COLLAPSED-P NIL
- :MIDDLE-RECT #(164.0D0 0.0D0 808.0D0 797.0D0) :EDITOR-RECT
- #(0.0D0 0.0D0 808.0D0 628.0D0) :COMPOSER-VISIBLE-P T
+ :MIDDLE-RECT #(164.0D0 0.0D0 1097.0D0 855.0D0) :EDITOR-RECT
+ #(0.0D0 0.0D0 1097.0D0 696.0D0) :COMPOSER-VISIBLE-P T
  :ASSISTANT-VISIBLE-P T :LISTENER-RECT
- #(0.0D0 629.0D0 808.0D0 168.0D0) :LISTENER-COLLAPSED-P NIL
- :UTILITIES-RECT #(973.0D0 0.0D0 383.0D0 797.0D0)
- :SELECTED-UTILITIES-TAB-TAG 6 :QUICK-VIEW-COLLAPSED-P T
+ #(0.0D0 697.0D0 1097.0D0 158.0D0) :LISTENER-COLLAPSED-P NIL
+ :UTILITIES-RECT #(1262.0D0 0.0D0 178.0D0 855.0D0)
+ :SELECTED-UTILITIES-TAB-TAG 0 :QUICK-VIEW-COLLAPSED-P NIL
  :UTILITIES-COLLAPSED-P NIL)
 
 ;;; composer
 
-"melodizedChords.opmo" 
+"rockband.opmo" 
 
 ;;; list of assistants
 
@@ -43,7 +50,11 @@ NIL
 
 (:GRID-MENU-STATE
  (:COMPOSER
-  ("melodizedChords.opmo" "play.opmo" "heterophonicAscend.opmo")
+  ("rockband.opmo" "fusionChordGen.opmo" "bluesFest.opmo"
+   "collatz.opmo" "separate-parts.opmo" "qiita-tutorial.opmo"
+   "/Applications/Opusmodus.app/Contents/Resources/English.lproj/system.omdocset/Documentation/2. Tutorial Guide/Stages 01-15/Stage 01.opmo"
+   "play.opmo" "collatz-rhythm.opmo" "microtonal-wave.opmo"
+   "hoge.opmo" "qiita-tutorial-2.opmo")
   :ASSISTANTS NIL))
 
 ;;; quick-view pathname

@@ -28,3 +28,4 @@
  :omn (make-omn :pitch p :length (span p '(s)))
  :sound 'gm
  :program 3))
+(preview)

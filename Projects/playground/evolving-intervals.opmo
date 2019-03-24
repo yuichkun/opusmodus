@@ -1,0 +1,19 @@
+(setf bars 10)
+(setf size (* bars 16))
+(setf itvl-cands '(2 5 -2 -5))
+(setf max-block 20)
+(setf tempo 150)
+(setf rhythm-unit '(s))
+
+;;;
+(setf cluster (mapcar (lambda(n) (+ 1 (/ max-block 2) (round n))) (gen-sawtooth size 1 (/ max-block 2))))
+
+(setf itvls (rnd-sample (sum cluster) itvl-cands))
+(setf pitch (interval-to-pitch itvls))
+(setf pitch (chordize (gen-divide cluster pitch)))
+(setf length (span pitch rhythm-unit))
+
+(setf omn (glue pitch length))
+
+(simple-score-grand (list omn) tempo)
+(preview)

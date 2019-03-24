@@ -1,0 +1,25 @@
+(setf tempo 120)
+(setf n-insts 5)
+(setf voice-interval 20)
+(setf size 400)
+(setf noise-ratio 10)
+(setf mod-ratio 200)
+
+(setf vec (gen-white-noise (/ size noise-ratio)))
+(setf mod (add-sine-waves 1 size (/ size mod-ratio) 1 :modulation vec))
+
+(setf pitch (chordize (gen-divide 2 (tonality-map '(major :root 'd4) (vector-to-pitch '(c2 c8) mod)))))
+
+(setf len (span pitch '(e s e s e e e s s s e s s s s s s)))
+
+(setf omn (flatten (glue pitch len)))
+
+(setf omns
+(loop for i from 0 to (- n-insts 1)
+:collect
+(progn
+(gen-rotate (* i voice-interval) omn)
+)))
+(simple-score-grand-IAC omns tempo)
+(show)
+(preview)

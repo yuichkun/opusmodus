@@ -1,0 +1,20 @@
+(setf thresh 0.03)
+
+(import-spectral-spear :frames "voice-ascend" "voice-ascend")
+
+(load "/Users/yuichkun/Dropbox/Opusmodus/Spectral Data/Partials/voice-ascend.opmo")
+
+(setf omn
+(loop for i from 0 to (length voice-ascend) by 10
+      for frame in voice-ascend
+:collect (progn
+(print "processing")
+(print i)
+(setf pitch (chordize (partial :pitch (partial-remove frame :type :amp :min thresh))))
+(setf length (span pitch '(t)))
+(setf omn (glue pitch length))
+))
+)
+(setf omns (list (filter-repeat 1 (flatten omn))))
+(simple-score omns)
+(preview)

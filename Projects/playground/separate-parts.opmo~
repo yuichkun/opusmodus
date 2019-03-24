@@ -1,0 +1,1 @@
+(integer-to-pitch (glue '(2 5 6) '(s s s)))

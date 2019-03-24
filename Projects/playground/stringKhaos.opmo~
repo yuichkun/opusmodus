@@ -1,0 +1,60 @@
+;;Settings
+(init-seed 130)
+
+;;Create Vectors
+(setf size 300)
+(list-plot (setf vec (gen-sine size 2 1 :modulation (gen-sine size 0.5 1))))
+(setf noise (gen-white-noise size))
+(setf noise-p (vector-to-pitch '(c4 c5) noise))
+
+;;Violin 1
+(setf vl1-p (vector-to-pitch '(g3 d7) vec)) 
+(setf raw-rhy (span vl1-p '(s)))
+(setf vl1-rhy (length-weight raw-rhy :weight '(7 1)))
+(setf vl1 (make-omn :pitch vl1-p :length vl1-rhy :articulation '(marc)))
+
+;;Violin 2
+(setf vl2-rhy (flatten (gen-pause (gen-divide 4 (length-weight raw-rhy :weight '(6 1))) :section '(0 1 2))))
+(setf vl2 (make-omn :pitch vl1-p :length vl2-rhy :articulation '(marc)))
+
+
+;;Violin 3
+(setf vl3-rhy (length-weight (span noise-p '(s)):weight '(1 3)))
+(setf vl3-art (append '(pizz) (span vl3-rhy '(stacc))))
+(setf vl3 (make-omn :pitch noise-p :length vl3-rhy :articulation vl3-art))
+
+;;Violin 4
+(setf vl4-p (rnd-order noise-p))
+(setf vl4-rhy (length-weight (span vl4-p '(s)):weight '(1 4)))
+(setf vl4-art (append '(pizz) (span vl4-rhy '(stacc))))
+(setf vl4 (make-omn :pitch vl4-p :length vl4-rhy :articulation vl4-art))
+
+
+;;Violin 5
+(setf vl5-p (rnd-order noise-p))
+(setf vl5-rhy (length-weight (span vl5-p '(s)):weight '(1 5)))
+(setf vl5-art (append '(pizz) (span vl5-rhy '(stacc))))
+(setf vl5 (make-omn :pitch vl5-p :length vl5-rhy :articulation vl5-art))
+
+
+;;Violin 6
+(setf vl6-p (rnd-order noise-p))
+(setf vl6-rhy (length-weight (span vl6-p '(s)):weight '(1 6)))
+(setf vl6-art (append '(pizz) (span vl6-rhy '(stacc))))
+(setf vl6 (make-omn :pitch vl6-p :length vl6-rhy :articulation vl6-art))
+
+
+;;SCORE
+(def-score stringKhaos
+           (:key-signature 'atonal
+            :time-signature '(4 4)
+            :tempo 120)
+(violin :omn vl1
+     :sound 'gm
+     :program 'violin)
+(violin :omn vl2)
+(violin :omn vl3)
+(violin :omn vl4)
+(violin :omn vl5)
+(violin :omn vl6)
+)

@@ -1,0 +1,16 @@
+(import-spectral-spear :partials "ascend" "ascend-partials")
+
+(load "/Users/yuichkun/Dropbox/Opusmodus/Spectral Data/Partials/ascend-partials.opmo")
+
+(setf omns
+(loop for i from 0 to (- (length ascend-partials) 1)
+:collect (progn
+(setf pitch (hertz-to-pitch (partial :freq (nth i ascend-partials))))
+(setf pitch (tonality-map '(pentatonic) pitch))
+(setf length (span pitch '(t)))
+(setf omn (filter-tie (glue pitch length))
+)))
+)
+
+(simple-score omns 60)
+(preview)

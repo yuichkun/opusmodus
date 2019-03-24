@@ -1,0 +1,11 @@
+(setf vec (gen-sine 120 2 1))
+(list-plot vec)
+(setf pitch (vector-to-pitch '(c3 c5) vec))
+(setf pitch (tonality-map '(pentatonic) pitch))
+
+(setf length (span pitch '(s)))
+
+(setf omn (glue pitch length))
+
+(simple-score (list omn))
+(preview)

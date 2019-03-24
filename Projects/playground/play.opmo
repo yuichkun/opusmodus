@@ -1,3 +1,123 @@
-(time-point-system (rnd-sample 16 (integer-to-pitch (gen-integer 0 4))) 's :type 2)
+;;; --------------------------------------------------------------------------------------------------------
+;;; this function adds CENTS or FLOATS to text-attributes, in this way you can notate 
+;;; - have a look how it's written in the score -> all combinations of attributes possible
 
-(time-point-system (integer-to-pitch (gen-integer 11)) 's :type 2 :start 6)
+(defun add-cents-tuning-to-text-atrributes (&key (centlist nil) (type nil))
+  (loop for i in (loop for x in (if (null centlist)
+                                  (append (loop for i from 0 upto 99 collect i) (loop for i from 1 upto 99 collect (neg! i)))
+                                  centlist)
+                   collect (compress (list x 'ct)))
+    append (add-text-attributes (list i (write-to-string (if (equal type :float) 
+                                                           (float (/ (append (compress (if (equal (car (explode i)) '-)
+                                                                                         (if (= (length (explode i)) 5)
+                                                                                           (filter-first 3 (explode i))
+                                                                                           (filter-first 2 (explode i)))
+                                                                                         (if (= (length (explode i)) 4)
+                                                                                           (filter-first 2 (explode i))
+                                                                                           (filter-first 1 (explode i)))
+                                                                                         ))) 100))
+                                                           i))))))
+
+
+
+
+;;; EXAMPLES
+
+(add-cents-tuning-to-text-atrributes :type :float)
+
+
+
+(add-cents-tuning-to-text-atrributes :type :cents)
+
+
+;;; -------------------------------------------------------------------------------------------------------------------
+;;; -------------------------------------------------------------------------------------------------------------------
+;;; this function get out all notated microtones for TUNING ;;; if there is nothing written it will be 0 cents (0)
+;;; you can combine all kinds of attributes
+;;; -------------------------------------------------------------------------------------------------------------------
+;;; -------------------------------------------------------------------------------------------------------------------
+
+(defun memberp (n liste)
+  (not (equal 'nil (member n liste))))
+
+(defun find-duplicates (lst)
+  (cond ((null lst) '())
+        ((member (car lst) (cdr lst)) (cons (car lst) (find-duplicates (cdr lst))))
+        (t (find-duplicates (cdr lst)))))
+
+
+(defun get-tuning-from-omn* (omnlist centlist)
+  (loop for i in (single-events (length-rest-remove omnlist))
+    with n = 0
+    when (not (null (find-duplicates (append (disjoin-attributes (car (last i))) centlist))))
+    do (setf n  (float (/ (append (compress 
+                                   (remove-if-not #'numberp (explode (car 
+                                                                      (find-duplicates 
+                                                                       (append (disjoin-attributes (car (last i)))
+                                                                               centlist))))))) 
+                          100)))
+
+    and collect (if (equal (car (explode (car (find-duplicates  (append (disjoin-attributes (car (last i))) 
+                                                                        centlist)))))
+                           '-)
+                  (* -1 n)
+                  n)
+
+    else collect 0))
+
+
+
+
+
+;;; EXAMPLES
+
+(setf centlist (add-cents-tuning-to-text-atrributes :type :float))
+
+;;; evaluate this and you will get the tuning-list with all combinations of attributes
+(get-tuning-from-omn* '(-q -q  e c4 fff q c4 mf legno+50ct+num1 e c4 mf -50ct+legno+batt e c5 ff pizz+-34ct) centlist)
+
+(get-tuning-from-omn* '(-q -q  e c4 fff -34ct+pizz q c4 mf legno+50ct e c4 mf -50ct+legno+batt e c5 ff pizz+-34ct) centlist)
+
+(get-tuning-from-omn* '(-q -q  e c4 fff -34ct+pizz+num11 q c4 mf legno+50ct e c4 mf -50ct+legno+batt e c5 ff pizz+-34ct) centlist)
+
+
+
+;;; cmd3 for LAYOUT/SCORE
+(-q -q  e c4 fff -34ct+pizz+num11 q c4 mf legno+50ct e c4 mf -50ct+legno+batt e c5 ff pizz+-34ct)
+(-q -q  e c4 fff q c4 mf legno+50ct+num1 e c4 mf -50ct+legno+batt+num2 e c5 ff pizz+legno+-34ct)
+
+
+
+
+
+;;; EXAMPLE HOW TO USE <get-tuning-from-omn*>
+
+
+(setf centlist (add-cents-tuning-to-text-atrributes :type :float))
+
+  
+;;; generating a omn-seq with mictronoes (by using articulation-SLOT
+ 
+(setf omn-seq (make-omn 
+               :length (quantize (gen-white-noise 50) '(2 3 5) :scale 1.4 :tolerance 0.02)
+               :pitch (filter-repeat 1 (vector-to-pitch '(c2 b6) (gen-white-noise 50)))
+               :span :pitch
+               :velocity (vector-to-velocity 0.1 0.99 (gen-white-noise 50))
+               :articulation (rnd-repeat 50 '(0ct 7ct -5ct 16ct -31ct -14ct 50ct -50ct))))
+
+;;; generating SCORE/MIDI
+
+(def-score microtonal
+           (:title "microtonal"
+                   :key-signature 'atonal   
+                   :time-signature '(4 4) 
+                   :tempo 120)
+  
+  (instr
+   :omn omn-seq
+   :channel 1
+   :tuning (get-tuning-from-omn* omn-seq centlist)
+   :sound 'gm
+   :program 'acoustic-grand-piano))
+
+(preview)

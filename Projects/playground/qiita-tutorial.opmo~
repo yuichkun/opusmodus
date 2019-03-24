@@ -1,0 +1,11 @@
+(setf motif '(q c4 d4 e4))
+
+(def-score qiita-tutorial
+ (:time-signature '(4 4)
+  :key-signature '(c major)
+  :tempo 120)
+ (piano :omn motif)
+)
+
+(display-midi *last-score*)
+(display-musicxml *last-score*)

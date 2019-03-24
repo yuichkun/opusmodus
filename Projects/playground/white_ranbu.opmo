@@ -1,6 +1,6 @@
 (init-seed 24)
 
-(setf pitches (randomize-octaves '(c2 c6) (gen-eval 3 '(harmonic-path 'major (integer-to-pitch (rnd-number 7 0 11)) :type 'rnd-order))))
+(setf pitches (rnd-octaves '(c2 c6) (gen-eval 3 '(harmonic-path 'major (integer-to-pitch (rnd-number 7 0 11)) :type 'rnd-order))))
 (setf pitches-2 (pitch-transpose 3 pitches))
 (setf pitches-3 (pitch-transpose 6 pitches))
 (setf pitches-4 (pitch-transpose 9 pitches))
@@ -21,4 +21,4 @@
             :program 4)
 )
 
-
+(preview)

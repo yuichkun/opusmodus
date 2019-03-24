@@ -1,0 +1,16 @@
+(setf original '(c4 d4 e4 f4))
+
+(setf method-1 (flatten (mapcar (lambda (tone) (chordize (interval-to-pitch '(5) :start tone))) original)))
+
+(setf method-2 (chord-interval-add (gen-repeat (length original) '(5)) original))
+
+(setf method-3 
+  (progn
+(create-chord perfect-5th '(0 5))
+(flatten (mapcar (lambda (tone) (expand-chord (list tone 'perfect-5th))) original))
+)
+)
+
+(setf method-4
+(gen-chord3 original (gen-repeat (length original) '(5)))
+)

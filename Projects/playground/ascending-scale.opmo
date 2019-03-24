@@ -18,3 +18,4 @@
             :channel 1
             :sound 'gm
             :program 'acoustic-grand-piano))
+(preview)

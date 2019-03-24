@@ -1,0 +1,56 @@
+(setf bars 16)
+(setf size (* bars 16))
+
+(setf sine-weight 1)
+(setf saw-count 10)
+(setf sine-count 1)
+(setf diffuse 0)
+
+;#|
+(setf saw-count 2)
+(setf sine-weight 0.4)
+(setf sine-count 4)
+(setf diffuse 0.8)
+;|#
+
+(setf vec (gen-sawtooth size saw-count 1 :modulation (gen-sine size sine-count sine-weight :modulation (gen-white-noise size :scale diffuse))))
+(list-plot vec :join-points nil)
+(setf lowest-note -39)
+(setf highest-note 49)
+
+(setf scaled-vec (vector-map (gen-integer (* 2 lowest-note) (* 2 highest-note)) vec))
+
+(setf ch1-map (flatten 
+(loop for n in scaled-vec
+:collect (progn
+(if (eq 0 (mod n 2))
+ '(s)
+ '(-s)
+)
+))))
+(setf ch2-map (flatten
+(loop for n in scaled-vec
+:collect (progn
+(if (eq 1 (mod n 2))
+ '(s)
+ '(-s)
+)
+))))
+
+(setf ch1
+(glue 
+(integer-to-pitch (mapcar (lambda(i) (/ i 2))(gen-swallow (flatten ch1-map) scaled-vec)))
+(flatten ch1-map))
+)
+
+(setf ch2
+(glue 
+(integer-to-pitch (mapcar (lambda(i) (floor (/ i 2)))(gen-swallow (flatten ch2-map) scaled-vec)))
+(flatten ch2-map))
+)
+
+(simple-score-grand-IAC (list ch1 ch2) 180)
+
+(preview)
+
+

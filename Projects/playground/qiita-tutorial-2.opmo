@@ -1,0 +1,69 @@
+;;; rnd-pick
+(setf pitch-set '(c4 db4 f4 g4 bb4 c5))
+(rnd-pick pitch-set)
+
+;;; rnd-sample
+(setf pitch-set '(c4 db4 f4 g4 bb4 c5))
+(rnd-sample 5 pitch-set)
+
+;;; rnd-unique
+(setf pitch-set '(c4 db4 f4 g4 bb4 c5))
+(rnd-unique 5 pitch-set)
+
+;;; gen-sine
+(setf wave (gen-sine 1200 3 1))
+(list-plot wave)
+
+;;; gen-triangle
+(setf wave (gen-triangle 1200 3 1))
+(list-plot wave)
+
+;;; gen-sawtooth
+(setf wave (gen-sawtooth 1200 3 1))
+(list-plot wave)
+
+;;; vector-to-pitch
+(setf wave (gen-sine 32 3 1))
+(vector-to-pitch '(c4 c6) wave)
+
+;;; tonality-map
+(setf wave (gen-sine 32 3 1))
+(setf raw-pitch (vector-to-pitch '(c4 c6) wave))
+(tonality-map '(major :root 'd4) raw-pitch)
+
+;;; gen-repeat
+(gen-repeat 2 '(q c4 d4 e4))
+
+
+;;; span
+(setf my-pitch '(c4 d4 e4 f4 g4 a4 b4))
+(span my-pitch '(e s s))
+
+;;; make-omn
+(setf my-pitch '(c4 d4 e4 f4 g4 a4 b4))
+(setf my-length (span pitch '(e s s)))
+(setf my-omn (make-omn :pitch my-pitch :length my-length))
+
+
+
+;;; sample
+(setf wave (gen-sine 64 5 1))
+(setf my-pitch
+ (tonality-map '(minor-pentatonic)
+  (vector-to-pitch
+   '(c4 c6)
+   wave
+  )
+ )
+)
+(setf my-length (span my-pitch '(s)))
+(setf my-omn (make-omn :pitch my-pitch :length my-length))
+
+(def-score qiita-tutorial-2
+ (:key-signature '(c minor)
+  :time-signature '(4 4)
+  :tempo 144)
+ (piano :omn my-omn)
+)
+(display-musicxml *last-score*)
+(display-midi *last-score*)

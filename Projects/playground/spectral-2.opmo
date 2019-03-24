@@ -1,0 +1,16 @@
+(import-spectral-spear :frames "toshi" "toshi")
+
+(load "/Users/yuichkun/Dropbox/Opusmodus/Spectral Data/Partials/toshi.opmo")
+
+(setf frame-length (length toshi))
+
+(setf omn
+(loop for frame in toshi
+ :collect (progn
+ (setf pitch (chordize (partial :pitch frame)))
+ (setf length (span pitch '(s)))
+ (setf bar (glue pitch length))
+)))
+
+(simple-score-IAC (list (filter-repeat 1 (flatten omn))))
+(live)

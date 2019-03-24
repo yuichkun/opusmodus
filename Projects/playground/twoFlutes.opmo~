@@ -1,0 +1,29 @@
+(setf mat (gen-divide 5 (gen-repeat 100 'c4)))
+(setf p-second (pitch-transpose (gen-integer 100) mat))
+(setf p-first (gen-divide 5 (flatten (pitch-transpose (gen-integer 1 5) (mclist (flatten p-second))))))
+(setf rhy (span p-second '(s)))
+(setf vel (progn 
+            (setf temp nil)
+            (dotimes (i (length (flatten rhy))) (setf temp(cons i temp)))
+            (setf temp (reverse temp))
+            (vector-map '(p < f) (list-to-vector temp))
+            ))
+
+
+(setf first (make-omn :pitch p-first :length rhy :articulation '(stacc) :velocity vel))
+(setf second (make-omn :pitch p-second :length rhy :articulation '(stacc)))
+
+
+
+(def-score twoFlutes
+           (:key-signature 'atonal
+            :time-signature '(5 16)
+            :tempo 132
+            :layout (treble-layout '(flute1 flute2)))
+(flute1 
+ :omn first
+ :sound 'gm
+ :program 'Flute)
+(flute2 
+ :omn second
+))

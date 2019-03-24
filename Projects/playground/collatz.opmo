@@ -1,0 +1,27 @@
+;; Config
+(setf MOD 84)
+(setf transpose-down 36)
+
+;; Util
+(defun collatz(n &optional ls)
+  (if (eq n 1)
+      (flatten (list ls 1))
+      (if (evenp n)
+        (collatz (/ n 2) (list ls n))
+        (collatz (+ (* n 3) 1) (list ls n))
+      )
+  )
+)
+
+;; Playground
+(setf ints (collatz 77031))
+(setf ints (modus ints :mod MOD))
+(setf ints (mapcar (lambda(n) (- n transpose-down)) ints))
+(list-plot ints :join-points t)
+(setf pitch (integer-to-pitch ints))
+(setf pitch (tonality-map '(major) pitch))
+(setf length (span pitch '(s)))
+(setf omn (glue pitch length))
+
+(simple-score-grand (list omn) 180)
+(preview)
