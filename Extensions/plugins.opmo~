@@ -89,31 +89,6 @@
       ,@(mapcar #'(lambda (part)
             (incf index)
             (list* (intern (concatenate 'string (string '#:inst-) (write-to-string index)))
-                    :omn `(quote ,part) :port (floor (/ (- index 1) 16)) :channel (+ 1 (mod (- index 1) 16)) nil)
-       )
-        score)
-    )
-  )
- )
-)
-
-
-
-(defun simple-score-grand-IAC-legacy (score &optional (tempo 120))
- (let ((index 0))
-  (eval
-   `(def-score simple-score-grand
-      (:key-signature 'atonal
-       :time-signature '(4 4)
-       :tempo ,tempo
-       :layout
- (loop for i from 1 to ,(length score)
-  :collect (grand-layout (intern (concatenate 'string (string '#:inst-) (write-to-string i))))
- )
-      )
-      ,@(mapcar #'(lambda (part)
-            (incf index)
-            (list* (intern (concatenate 'string (string '#:inst-) (write-to-string index)))
                     :omn `(quote ,part) :port 0 :channel index nil)
        )
         score)
@@ -121,4 +96,3 @@
   )
  )
 )
-
